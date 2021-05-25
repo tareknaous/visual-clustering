@@ -1,1 +1,1 @@
-# visual-clustering
+# Visual Clustering
