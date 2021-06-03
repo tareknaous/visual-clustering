@@ -4,6 +4,7 @@ from sklearn import datasets
 import alphashape
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
 from shapely.ops import cascaded_union
+from shapely.geometry import Polygon
 
 
 def find_intersections(polygons):
@@ -60,9 +61,6 @@ def return_unique_polygons(intersections):
   return intersections
 
 
-from shapely.ops import cascaded_union
-
-
 def plot_new_polygons(unique_dictionary, polygons):
     'Subtracts polygons with intersection % below threshold, and combine polygons with intersection % above threshold'
 
@@ -110,7 +108,7 @@ def plot_new_polygons(unique_dictionary, polygons):
                         plt.plot(x, y)
 
 
-def plot_polygons(type, num_samples, num_clusters, random_state, *cluster_std, keep_points=False):
+def create_polygons(type, num_samples, num_clusters, random_state, *cluster_std, keep_points=False):
     if type == 'blobs':  # works fine
         data = datasets.make_blobs(n_samples=num_samples, centers=num_clusters, random_state=random_state,
                                    center_box=(-30, 30))
@@ -132,7 +130,7 @@ def plot_polygons(type, num_samples, num_clusters, random_state, *cluster_std, k
             raise Exception("Can only take 2 clusters for noisy_circles")
 
     if type == 'varied_blobs':  # works fine
-        cluster_std = np.random.random(num_clusters)
+        cluster_std = 1.5 * np.random.random(num_clusters)
         data = datasets.make_blobs(n_samples=num_samples,
                                    centers=num_clusters,
                                    cluster_std=cluster_std,
@@ -140,7 +138,7 @@ def plot_polygons(type, num_samples, num_clusters, random_state, *cluster_std, k
                                    center_box=(-30, 30))
 
     plt.figure()
-    plt.scatter(data[0][:, 0], data[0][:, 1])
+    plt.scatter(data[0][:, 0], data[0][:, 1], s=1)
 
     # Create a list of empty arrays for each cluster
     clusters = [[] for _ in range(num_clusters)]
@@ -153,34 +151,57 @@ def plot_polygons(type, num_samples, num_clusters, random_state, *cluster_std, k
     # Create emtpy arrays for convex hulls and data points
     hulls = [[] for _ in range(num_clusters)]
     points = [[] for _ in range(num_clusters)]
+    hulls_vertices = [[] for _ in range(num_clusters)]
 
-    # Use the Concave Hull
+    # Use the Concave Hull for the noisy moons shape
     if type == "noisy_moons":
         ALPHA = 5
         for i in range(0, len(clusters)):
             hull = alphashape.alphashape(np.array(clusters[i]), ALPHA)
             hull_pts = hull.exterior.coords.xy
             hulls[i] = hull_pts
-            points[i].append(np.array(clusters[i]))
 
-        plt.figure()
-        for i in range(0, len(clusters)):
-            plt.plot(hulls[i][0], hulls[i][1], color='black')
-            if keep_points == True:
-                plt.plot(points[i][0][:, 0], points[i][0][:, 1], 'o')
+        # Append vertices
+        for i in range(0, len(hulls)):
+            for j in range(0, len(hulls[0][i])):
+                vertex = [hulls[i][0][j], hulls[i][1][j]]
+                hulls_vertices[i].append(vertex)
 
-                # Use the ConvexHull
+
+    # Use the ConvexHull for all other shapes
     else:
+        # Append the hulls
         for i in range(0, len(clusters)):
             hulls[i] = ConvexHull(clusters[i])
-            points[i].append(np.array(clusters[i]))
 
-        # Plot the polygon
-        plt.figure()
-        for i in range(0, len(clusters)):
-            for simplex in hulls[i].simplices:
-                plt.plot(points[i][0][simplex, 0], points[i][0][simplex, 1], 'k-')
-                if keep_points == True:
-                    plt.plot(points[i][0][:, 0], points[i][0][:, 1], 'o')  # Plot points
+        # Append vertices of the hulls
+        for i in range(0, len(hulls)):
+            for j in range(0, len(hulls[i].vertices)):
+                hulls_vertices[i].append(clusters[i][hulls[i].vertices[j]])
+
+    # Create empty array to append the polygons
+    polygons = []
+
+    # Create polygons from hull vertices
+    for i in range(0, len(hulls_vertices)):
+        polygon = Polygon(np.array(hulls_vertices[i]))
+        polygons.append(polygon)
+
+    return polygons
 
 
+
+#Test function
+NUM_SAMPLES= 1500
+NUM_CLUSTERS= 30
+
+test = create_polygons(type='blobs',
+                       num_samples=NUM_SAMPLES,
+                       num_clusters=NUM_CLUSTERS,
+                       random_state=13,
+                       keep_points=False)
+
+intersections = find_intersections(test)
+dictionary = return_unique_polygons(intersections)
+plt.figure()
+plot_new_polygons(dictionary, test)
