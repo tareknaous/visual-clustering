@@ -44,7 +44,7 @@ def create_input_image(data, visualize=False):
 
 
 
-def get_instances(prediction):
+def get_instances(prediction, data):
   #Adjust format (clusters to be 255 and rest is 0)
   prediction[prediction == 255] = 3
   prediction[prediction == 0] = 4
@@ -85,7 +85,25 @@ def get_instances(prediction):
   #Get regions
   regions = measure.regionprops(markers, intensity_image=cells)
 
-  return regions
+  #Get Cluster IDs
+  cluster_ids = np.zeros(len(data[0]))
+
+  for i in range(0,len(cluster_ids)):
+    row = math.floor(data[0][i][0])
+    column = math.floor(data[0][i][1])
+    if row < 256 and column < 256:
+      cluster_ids[i] = markers[row][column] - 10
+    elif row >= 256:
+      # cluster_ids[i] = markers[255][column]
+      cluster_ids[i] = 0
+    elif column >= 256:
+      # cluster_ids[i] = markers[row][255] 
+      cluster_ids[i] = 0
+
+  cluster_ids = cluster_ids.astype('int8')
+  cluster_ids[cluster_ids == -11] = 0
+    
+  return cluster_ids
 
 
 
