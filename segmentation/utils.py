@@ -8,6 +8,8 @@ import math
 from scipy.spatial import ConvexHull
 from shapely.geometry import Polygon
 
+
+
 #Function that predicts on only 1 sample 
 def predict_sample(image):
   prediction = model.predict(image[tf.newaxis, ...])
@@ -17,9 +19,7 @@ def predict_sample(image):
   return result
 
 
-
-
-
+#Function that creates the matrix that will be used as input to the binary segmentation model
 def create_input_image(data, visualize=False):
   #Initialize input matrix
   input = np.ones((256,256))
@@ -41,10 +41,17 @@ def create_input_image(data, visualize=False):
   return input
 
 
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+from scipy import ndimage
+from skimage import measure, color, io
+from tensorflow.keras.preprocessing import image
+from scipy import ndimage
 
 
-
-def get_instances(prediction, data):
+#Function that performs instance segmentation and clusters the dataset
+def get_instances(prediction, data, max_filter_size=1):
   #Adjust format (clusters to be 255 and rest is 0)
   prediction[prediction == 255] = 3
   prediction[prediction == 0] = 4
@@ -79,18 +86,25 @@ def get_instances(prediction, data):
   markers = cv2.watershed(img,markers)
   img[markers == -1] = [0,255,255]  
 
+  #Maximum filtering
+  markers = ndimage.maximum_filter(markers, size=max_filter_size)
+  # plt.imshow(markers.T, cmap='gray')
+  # plt.gca().invert_yaxis()
+
   #Get an RGB colored image
-  #img2 = color.label2rgb(markers, bg_label=1)
+  img2 = color.label2rgb(markers, bg_label=1)
+  # plt.imshow(img2)
+  # plt.gca().invert_yaxis()
 
   #Get regions
   regions = measure.regionprops(markers, intensity_image=cells)
 
   #Get Cluster IDs
-  cluster_ids = np.zeros(len(data[0]))
+  cluster_ids = np.zeros(len(data))
 
   for i in range(0,len(cluster_ids)):
-    row = math.floor(data[0][i][0])
-    column = math.floor(data[0][i][1])
+    row = math.floor(data[i][0])
+    column = math.floor(data[i][1])
     if row < 256 and column < 256:
       cluster_ids[i] = markers[row][column] - 10
     elif row >= 256:
@@ -104,7 +118,6 @@ def get_instances(prediction, data):
   cluster_ids[cluster_ids == -11] = 0
     
   return cluster_ids
-
 
 
 
@@ -132,5 +145,5 @@ def draw_clusters(regions,data):
 def visual_clustering(data):
   input = create_input_image(data)
   result = predict_sample(input)
-  regions = get_instances(result)
+  regions = get_instances(result, data)
   draw_clusters(regions,data)
