@@ -1,3 +1,3 @@
 # Visual Clustering
 
-This repo is currently under construction
+This is currently under construction
