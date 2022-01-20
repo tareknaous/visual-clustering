@@ -29,7 +29,7 @@ from visual_clustering import VisualClustering
 
 model = VisualClustering(median_filter_size = 1, max_filter_size= 1)
 ```
-The parameters ```median_filter_size``` and ```median_filter_size``` are set to 1 by default. \
+The parameters ```median_filter_size``` and ```max_filter_size``` are set to 1 by default. \
 You can experiment with different values to see *what works best for your dataset* !
 
 
