@@ -40,6 +40,8 @@ from sklearn import datasets
 data = datasets.make_blobs(n_samples=50000, centers=6, random_state=23,center_box=(-30, 30))
 ```
 
+<img align="center" width="300"  src="images/blobs.png" alt="blobs">
+
 To cluster the dataset, use the ```fit``` function of the model:
 ```python
 predictions = model.fit(data[0])
@@ -59,6 +61,9 @@ colors = np.array(list(islice(cycle(["#000000", '#377eb8', '#ff7f00', '#4daf4a',
 colors = np.append(colors, ["#000000"])
 plt.scatter(data[0][:, 0], data[0][:, 1], s=10, color=colors[predictions.astype('int8')])
 ```
+
+<img align="center" width="300"  src="images/clustered_blobs.png" alt="clustered_blobs">
+
 
 ## Dependencies
 Make sure that you have the following libraries installed:
