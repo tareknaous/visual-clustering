@@ -33,11 +33,12 @@ The parameters ```median_filter_size``` and ```max_filter_size``` are set to 1 b
 You can experiment with different values to see *what works best for your dataset* !
 
 
-Let's create a synthetic dataset of blobs.
+Let's create a simple synthetic dataset of blobs.
 ```python
 from sklearn import datasets
 
 data = datasets.make_blobs(n_samples=50000, centers=6, random_state=23,center_box=(-30, 30))
+plt.scatter(data[0][:, 0], data[0][:, 1], s=1, c='black')
 ```
 
 <img align="center" width="300"  src="images/blobs.png" alt="blobs">
@@ -64,6 +65,8 @@ plt.scatter(data[0][:, 0], data[0][:, 1], s=10, color=colors[predictions.astype(
 
 <img align="center" width="300"  src="images/clustered_blobs.png" alt="clustered_blobs">
 
+Run this code inside a colab notebook: \
+https://colab.research.google.com/drive/1DcZXhKnUpz1GDoGaJmpS6VVNXVuaRmE5?usp=sharing
 
 ## Dependencies
 Make sure that you have the following libraries installed:
