@@ -65,11 +65,11 @@ Make sure that you have the following libraries installed:
 ```
 transformers 4.15.0
 scipy 1.4.1
-tensorflow
-keras
-numpy
-cv2
-skimage
+tensorflow 2.7.0
+keras 2.7.0
+numpy 1.19.5
+cv2 4.1.2
+skimage 0.18.3
 ```
 ## Contact
 **Tarek Naous**: [Scholar](https://scholar.google.com/citations?user=ImyLv44AAAAJ&hl=en) | [Github](https://github.com/tareknaous?tab=repositories) |
