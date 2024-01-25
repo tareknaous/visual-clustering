@@ -68,10 +68,19 @@ plt.scatter(data[0][:, 0], data[0][:, 1], s=10, color=colors[predictions.astype(
 
 <img align="center" width="300"  src="images/clustered_blobs.png" alt="clustered_blobs">
 
-## Colab Demo
+## Colab Demo: Cluster Your Name!
 
-Run Visual Clustering inside a colab notebook! \
+Run Visual Clustering inside a colab notebook to cluster your own name! \
 https://colab.research.google.com/drive/1DcZXhKnUpz1GDoGaJmpS6VVNXVuaRmE5?usp=sharing
+
+Name Plot:
+
+<img align="center"  width="800"  src="images/tarek-unclustered.png" alt="tarek-unclustered">
+
+Name clustered via Visual Clustering:
+
+<img align="center"  width="800"  src="images/tarek-clustered.png" alt="tarek-clustered">
+
 
 ## Dependencies
 Make sure that you have the following libraries installed:
