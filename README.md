@@ -2,6 +2,7 @@
 
 Clustering is a popular approach to detect patterns in unlabeled data. Existing clustering methods typically treat samples in a dataset as points in a metric space and compute distances to group together similar points. **Visual Clustering** is a  different way of clustering points in 2-dimensional space, inspired by how humans *"visually"* cluster data. The algorithm is based on trained neural networks that perform instance segmentation on plotted data. 
 
+
 For more details, see the accompanying paper: ["Clustering Plotted Data by Image Segmentation"](https://openaccess.thecvf.com/content/CVPR2022/html/Naous_Clustering_Plotted_Data_by_Image_Segmentation_CVPR_2022_paper.html), **2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)**, and please use the citation below.
 
 ```
@@ -12,6 +13,8 @@ For more details, see the accompanying paper: ["Clustering Plotted Data by Image
   year={2022}
 }
 ```
+
+<img align="center"  src="images/algorithm.png" alt="algorithm">
 
 ## Installation
 
