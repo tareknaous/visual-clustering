@@ -68,7 +68,9 @@ plt.scatter(data[0][:, 0], data[0][:, 1], s=10, color=colors[predictions.astype(
 
 <img align="center" width="300"  src="images/clustered_blobs.png" alt="clustered_blobs">
 
-Run this code inside a colab notebook: \
+## Colab Demo
+
+Run Visual Clustering inside a colab notebook! \
 https://colab.research.google.com/drive/1DcZXhKnUpz1GDoGaJmpS6VVNXVuaRmE5?usp=sharing
 
 ## Dependencies
